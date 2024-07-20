@@ -109,7 +109,7 @@ public class BearStateManager : MonoBehaviour
         {
             //Tan cong
             float randomChoice = UnityEngine.Random.Range(1, 10);
-            if (randomChoice > 1)
+            if (randomChoice > 7)
             {
                 StateEnter(stateKnifeRain);
             }
@@ -124,16 +124,23 @@ public class BearStateManager : MonoBehaviour
     {
         return Instantiate(obj, pos, rot);
     }
-
     public void UseCoroutine(float waitTime, Action action)
     {
         StartCoroutine(WaitForAction(waitTime, action));
     }
-
+    public void UseCoroutine(float waitTime, Action<GameObject> action, GameObject obj)
+    {
+        StartCoroutine(WaitForAction(waitTime, action, obj));
+    }
     IEnumerator WaitForAction(float delayTime, Action action)
     {
         yield return new WaitForSeconds(delayTime);
         action();
+    }
+    IEnumerator WaitForAction(float delayTime, Action<GameObject> action, GameObject obj)
+    {
+        yield return new WaitForSeconds(delayTime);
+        action(obj);
     }
 
 

@@ -65,7 +65,12 @@ public class StateExactKnife : IState
     }
     private void ThrowKnife()
     {
-        
+        Action<GameObject> disableKnife = (newKnife) =>
+        {
+            poolQueue.Enqueue(newKnife);
+            newKnife.SetActive(false);
+        };
+
         Action throwOneKnife = () =>
         {
             GameObject newKnife = poolQueue.Dequeue();
@@ -88,12 +93,7 @@ public class StateExactKnife : IState
                 }
 
                 newKnife.GetComponent<Rigidbody2D>().velocity = bulletSpeed * newKnife.transform.up;
-                Action disableKnife = () =>
-                {
-                    poolQueue.Enqueue(newKnife);
-                    newKnife.SetActive(false);
-                };
-                stateManager.UseCoroutine(10f, disableKnife);
+                stateManager.UseCoroutine(10f, disableKnife, newKnife);
             }
         };
         stateManager.UseCoroutine(0f, throwOneKnife);

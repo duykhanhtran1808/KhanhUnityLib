@@ -66,7 +66,12 @@ public class StateKnifeRain : IState
 
     private void KnifeRain()
     {
-        
+        Action<GameObject> disableKnife = (newKnife) =>
+        {
+            poolQueue.Enqueue(newKnife);
+            newKnife.SetActive(false);
+
+        };
 
         Action makeKnife = () => 
             {
@@ -85,19 +90,14 @@ public class StateKnifeRain : IState
                     newKnife.transform.Rotate(Vector3.forward, 180f);
                     xDistance += 5;
 
-                        stateManager.UseCoroutine(3f, disableKnife);
+                        stateManager.UseCoroutine(3f, disableKnife, newKnife);
                     }
             }
 
             };
 
-        GameObject newKnife = poolQueue.Dequeue();
-        Action<GameObject> disableKnife = (newKnife) =>
-        {
-            poolQueue.Enqueue(newKnife);
-            newKnife.SetActive(false);
-
-        };
+        //GameObject newKnife = poolQueue.Dequeue();
+        
 
         stateManager.UseCoroutine(1f, makeKnife);
         stateManager.UseCoroutine(2f, makeKnife);
